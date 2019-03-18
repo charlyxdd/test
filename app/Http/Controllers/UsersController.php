@@ -16,7 +16,7 @@ class UsersController extends Controller
     public function login(Request $request)
     {
 
-        if (Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])) {
+        if (Auth::attempt(['email' => $request->get('username'), 'password' => $request->get('password')])) {
             return json_encode(['result' => 'success', 'user' => Auth::user(), 'token' => Auth::user()->createToken(env('APP_NAME', 'Laravel'))->accessToken]);
         } else {
             return json_encode(['result' => 'error', 'error' => 'El usuario y/o la contraseña son incorrectos']);
@@ -71,9 +71,9 @@ class UsersController extends Controller
             $data['result'] = 'success';
             if ($related) {
                 $related = unserialize($related);
-                $data['data'] = User::with($related)->where('email', '!=', 'Master')->orderBy('id', 'desc')->paginate(10);
+                $data['data'] = User::with($related)->orderBy('id', 'desc')->paginate(10);
             } else {
-                $data['data'] = User::where('email', '!=', 'Master')->orderBy('id', 'desc')->paginate(10);
+                $data['data'] = User::orderBy('id', 'desc')->paginate(10);
             }
         } else {
             $data['error'] = 'No tiene autorización';
